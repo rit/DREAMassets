@@ -1,0 +1,13 @@
+[Unit]
+Description=Stop dream-sniffer on low hour
+
+[Timer]
+
+# Every 5 minutes
+# OnCalendar=*-*-* *:0/5:00
+
+OnCalendar=*-*-* 12:05:00
+Persistent=True
+
+[Install]
+WantedBy=multi-user.target
