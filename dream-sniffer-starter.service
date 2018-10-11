@@ -1,0 +1,17 @@
+[Unit]
+Description=dream-sniffer-starter with timer
+
+[Service]
+User=root
+Type=oneshot
+WorkingDirectory=/home/pi/repo/dream.git/sobun/bin
+ExecStart=/bin/bash -c 'exec ./start-dream-sniffer.sh'
+StandardInput=null
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=%n
+KillMode=mixed
+TimeoutStopSec=20
+
+[Install]
+WantedBy=multi-user.target

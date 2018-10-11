@@ -1,0 +1,8 @@
+[Unit]
+Description=Start dream-sniffer in the morning
+
+[Timer]
+OnCalendar=*-*-* 13:50:00
+
+[Install]
+WantedBy=multi-user.target

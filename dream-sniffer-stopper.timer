@@ -6,7 +6,7 @@ Description=Stop dream-sniffer on low hour
 # Every 5 minutes
 # OnCalendar=*-*-* *:0/5:00
 
-OnCalendar=*-*-* 12:05:00
+OnCalendar=*-*-* 13:48:00
 Persistent=True
 
 [Install]
