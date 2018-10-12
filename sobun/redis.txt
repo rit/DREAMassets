@@ -1,0 +1,13 @@
+# Remove all the celery results
+redis --scan --pattern 'celery-task-meta-*' | xargs redis-cli del
+
+
+# Get memory usage
+redis-cli info | grep memory_human
+
+
+# Remove all data from redis dbs
+redis-cli flushall
+
+# Extract payload from redis server into a text file
+redis-cli lrange celery 0 399 > sample_payloads.txt
