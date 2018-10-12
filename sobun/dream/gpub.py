@@ -7,6 +7,7 @@ from __future__ import print_function
 
 import json
 import socket
+import copy
 
 from google.cloud import pubsub
 from google.cloud.pubsub import types
@@ -22,27 +23,28 @@ topic = "projects/dream-assets-project/topics/tags-dev"
 # once sufficient time has elapsed (by default, this is 0.05 seconds).
 # We batch for 10 seconds worth of data coming out of the redis queue.
 publisher = pubsub.PublisherClient(
-        batch_settings=types.BatchSettings(max_messages=500, max_latency=20), )
-
-
-def on_result(future):
-    msg_id = future.result()
-    if not msg_id:
-        print("Message NOT created on Google Pub/Sub")
-        # TODO make celery retry
+        batch_settings=types.BatchSettings(max_messages=50, max_latency=0.1), )
 
 
 # reduce the packet to a payload and send it to BigQuery via PubSub
 # syncer.py calls this function 
 def send_data(packet, hci):
+
+    original_packet = copy.deepcopy(packet)
+
+    def on_result(future):
+        msg_id = future.result()
+        if not msg_id:
+            from dream.syncer import push
+            push.delay(original_packet)
+            print("Message NOT created on Google Pub/Sub. Repush the packet back into the queue")
+        else:
+            print('Created Cloud Pub/Sub msg_id: {}'.format(msg_id))
+
     payload = clean(packet)
-    try:
-        future = publisher.publish(topic, payload)
-        print("sending payload from HCI {hci}: {payload}".format(hci=hci, payload=payload))
-    except:
-        print("unable to publish to Google Pub/Sub")
-    else:
-        future.add_done_callback(on_result)
+    future = publisher.publish(topic, payload)
+    future.add_done_callback(on_result)
+    print("sending payload from HCI {hci}: {payload}".format(hci=hci, payload=payload))
 
 
 # TODO make clean a private function; only used by send_data 
