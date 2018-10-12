@@ -9,7 +9,7 @@ User=pi
 Type=simple
 WorkingDirectory=/home/pi/repo/dream.git/sobun
 Environment=GOOGLE_APPLICATION_CREDENTIALS=/home/pi/secrets/google-credentials.secret.json
-ExecStart=/bin/bash -c 'exec ./venv/bin/celery worker -A dream.syncer'
+ExecStart=/bin/bash -c 'exec ./venv/bin/celery worker -A dream.syncer -c 2'
 Restart=always
 StandardInput=null
 StandardOutput=syslog

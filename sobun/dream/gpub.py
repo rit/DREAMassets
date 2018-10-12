@@ -23,7 +23,7 @@ topic = "projects/dream-assets-project/topics/tags-dev"
 # once sufficient time has elapsed (by default, this is 0.05 seconds).
 # We batch for 10 seconds worth of data coming out of the redis queue.
 publisher = pubsub.PublisherClient(
-        batch_settings=types.BatchSettings(max_messages=50, max_latency=0.1), )
+        batch_settings=types.BatchSettings(max_messages=50, max_latency=10), )
 
 
 # reduce the packet to a payload and send it to BigQuery via PubSub
